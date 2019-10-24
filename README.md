@@ -1,2 +1,2 @@
-Sistema de carteirinha estudantil com Flask - não finalizado
+Sistema de carteirinha estudantil  para disciplina de Redes I (Utilização da framework Flask) - não finalizado
 
