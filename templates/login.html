@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css"  href="../static/index.css" />
+    </head>
+   <body>
+       <div id="layout-login">
+           <div id="content">
+       <header>
+          
+           <p>
+           Gere sua carteirinha online bla bla bla a melhor forma de nao sei o que
+           </p>
+       </header>
+      <form id="form-login" action="{{ url_for('auth') }}" method = "post">
+         <ul>
+             <li><input class="lbl" id="lbl-user" type="text" placeholder="CPF"/></li>
+            <li><input class="lbl" id="lbl-pass" type="password" placeholder="Senha" /></li>
+            <li><input id="btn-login" type="submit" value="Gerar Carteirinha" /><input name="message" type="hidden" id="hm"></li>
+          </ul>
+      </form>
+           
+       
+           </div>
+       </div>
+      
+      <script>
+          //funcao trata a msg de resposta do servidor
+          function tratarStatus(msg){
+            //consertar fluxo do localstorage e requests
+              if (msg[14] == 0){
+                 
+                  localStorage.setItem('dados_carteirinha', msg)
+             
+                  window.location = "/carteirinha/"
+                  } else {
+                    switch (msg[0]){
+                        case '1':
+                            alert('Preencha seu CPF para exibição da carteirinha.')
+                            break;
+                        case '2':
+                            alert('Senha incorreta!')
+                            break;
+                        case '3':
+                           alert("CPF não encontrado em nossa base de dados.")
+                            break;
+                        case '4':
+                            alert("DRE inativo!")
+                            break;
+                        case '5':
+                            alert("Foto não consta em nossa base de dados!")
+                            break;
+                        case '6':
+                            break;
+                        default:
+                            break;
+
+                    }
+
+                
+              }
+          }
+          
+  
+            const lblUser = document.getElementById("lbl-user");
+            const lblPass = document.getElementById("lbl-pass");
+            const form = document.getElementById("form-login");
+   
+            form.addEventListener("submit", (e) =>{
+                
+                e.preventDefault();
+                
+                let msg = `GET          USER ${lblUser.value}\n PASS ${lblPass.value}`;
+               
+ 
+                 fetch("/auth/", {  
+                    method: 'POST',   
+                    redirect: 'follow', 
+                    body: msg})
+                    .then((data) => {  
+                    
+                        data.text().then((msg) => {
+                            
+                            tratarStatus(msg);
+                            
+                        });
+                        })  
+                    .catch((erro) => {  
+                        console.log('falha: ', erro);  
+                    });
+                    
+            });
+            
+        </script>
+   </body>
+</html>
